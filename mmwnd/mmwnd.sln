@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mmwndhook", "mmwndhook\mmwndhook.vcproj", "{F00FF096-8FAF-418B-B4EA-6F2FD72756ED}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mmwnd", "mmwnd\mmwnd.vcproj", "{F0BA11A4-926E-44AB-97F2-B7708674C996}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3B3B0322-3669-44C7-8911-027B0EB4634F}"
+	ProjectSection(SolutionItems) = preProject
+		common\logger.hpp = common\logger.hpp
+		common\tstring.hpp = common\tstring.hpp
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F00FF096-8FAF-418B-B4EA-6F2FD72756ED}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F00FF096-8FAF-418B-B4EA-6F2FD72756ED}.Debug|Win32.Build.0 = Debug|Win32
+		{F00FF096-8FAF-418B-B4EA-6F2FD72756ED}.Release|Win32.ActiveCfg = Release|Win32
+		{F00FF096-8FAF-418B-B4EA-6F2FD72756ED}.Release|Win32.Build.0 = Release|Win32
+		{F0BA11A4-926E-44AB-97F2-B7708674C996}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F0BA11A4-926E-44AB-97F2-B7708674C996}.Debug|Win32.Build.0 = Debug|Win32
+		{F0BA11A4-926E-44AB-97F2-B7708674C996}.Release|Win32.ActiveCfg = Release|Win32
+		{F0BA11A4-926E-44AB-97F2-B7708674C996}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
