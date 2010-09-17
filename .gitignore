@@ -1,4 +1,5 @@
 *.ncb
 *.suo
+*.aps
 mmwnd/out
 *.vcproj.*

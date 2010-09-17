@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3B3B0322-3669-44C7-8911-027B0EB4634F}"
 	ProjectSection(SolutionItems) = preProject
 		common\logger.hpp = common\logger.hpp
+		common\profile.hpp = common\profile.hpp
 		common\tstring.hpp = common\tstring.hpp
 	EndProjectSection
 EndProject
