@@ -101,6 +101,19 @@ bool adjust_pos(HWND hwnd) {
 
   if (pt.x == rect.left && pt.y == rect.top) return false; // no change
 
+  // ignore desktop window
+  HWND desktop = ::GetDesktopWindow();
+  if (hwnd == desktop) return false;
+
+
+  // ignore descendants of taskbar
+  HWND root = NULL;
+  HWND tmp = hwnd;
+  do { root = tmp; } while ((tmp = ::GetParent(tmp)) && tmp != desktop);
+  TCHAR root_class[16];
+  if (::GetClassName(root, root_class, 16) &&
+      gnn::tstring(_T("Shell_TrayWnd")) == root_class) return false;
+
   HWND parent = ::GetParent(hwnd);
   if ((wi.dwStyle & WS_CHILD) && parent) ::ScreenToClient(parent, &pt);
   ::MoveWindow(hwnd, pt.x, pt.y, width, height, TRUE);
