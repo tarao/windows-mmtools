@@ -72,11 +72,21 @@ bool adjust_pos(HWND hwnd) {
   wndpl.length = sizeof(wndpl);
   ::GetWindowPlacement(hwnd, &wndpl);
 
-  if (rect.right-rect.left <= 0 || rect.bottom-rect.top <= 0 ||
+  if (::IsRectEmpty(&rect) ||
       wndpl.showCmd == 0 || (wndpl.showCmd & SW_MINIMIZE) ||
       wndpl.showCmd == SW_MAXIMIZE) return false; // not normal size window
 
   POINT pt1 = { rect.left, rect.top }, pt2 = { rect.right, rect.bottom };
+
+  RECT vscr;
+  vscr.left = ::GetSystemMetrics(SM_XVIRTUALSCREEN);
+  vscr.top = ::GetSystemMetrics(SM_YVIRTUALSCREEN);
+  vscr.right = vscr.left + ::GetSystemMetrics(SM_CXVIRTUALSCREEN);
+  vscr.bottom = vscr.top + ::GetSystemMetrics(SM_CYVIRTUALSCREEN);
+  if (!::PtInRect(&vscr, pt1) && !::PtInRect(&vscr, pt2)) {
+    return false; // completely out of screen
+  }
+
   HMONITOR mon1, mon2;
   if ((mon1 = ::MonitorFromPoint(pt1, MONITOR_DEFAULTTONULL)) &&
       (mon2 = ::MonitorFromPoint(pt2, MONITOR_DEFAULTTONULL))) {
@@ -124,6 +134,7 @@ bool adjust_pos(HWND hwnd) {
 
 #ifdef _DEBUG
   std::basic_stringstream<gnn::tchar> ss;
+  ss << std::endl << _T("    ") << _T("[hwnd] 0x") << std::setbase(16) << hwnd;
   ss << std::endl << _T("    ") << _T("[pos] ") << to_s(rect);
   ss << std::endl << _T("    ") << _T("[mon] ") << to_s(mi.rcWork);
   RECT dst = { pt.x, pt.y, pt.x+width, pt.y+height };
