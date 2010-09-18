@@ -40,7 +40,12 @@ int main(HINSTANCE instance) {
   profile() >> PROFILE_ENTRY_NOTIFYICON >> use_notify_icon;
 
   notify_icon& ni = the_notify_icon();
-  ni.init(hwnd, 0, WM_USER_POPUP, NULL, _T("mmwnd"));
+  HICON icon = ::LoadIcon(instance, MAKEINTRESOURCE(IDI_ICON1));
+  TCHAR module_path[_MAX_PATH];
+  TCHAR module_name[_MAX_FNAME];
+  ::GetModuleFileName(instance, module_path, _MAX_PATH);
+  _tsplitpath(module_path, NULL, NULL, module_name, NULL);
+  ni.init(hwnd, 0, WM_USER_POPUP, icon, module_name);
   if (use_notify_icon && !ni.install()) return 4;
 
   MSG msg;

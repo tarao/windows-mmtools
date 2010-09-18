@@ -8,7 +8,7 @@ public:
     nid.cbSize = sizeof(nid);
     nid.hWnd   = hwnd;
     nid.uID    = id;
-    nid.uFlags = NIF_MESSAGE | /* NIF_ICON |*/ NIF_TIP;
+    nid.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP;
     nid.uCallbackMessage = msg;
     nid.hIcon  = icon;
     lstrcpy(nid.szTip, tip);
