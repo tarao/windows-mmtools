@@ -1,0 +1,14 @@
+#! /usr/bin/env ruby
+dir = File.join(File.dirname($0), 'dist')
+system("rm -r '#{dir}' 2>/dev/null")
+system("mkdir -p '#{dir}'")
+Dir.chdir(dir)
+%w'
+  ../../NYSL.txt
+  ../README.ja.txt
+  ../out/Win32/Release/mmwnd.exe
+  ../out/Win32/Release/mmwndhook.dll
+  ../out/x64/Release/mmwnd64.exe
+  ../out/x64/Release/mmwndhook64.dll
+'.each{|f| system("cp '#{f}' .")}
+system('zip mmwnd.zip *')
