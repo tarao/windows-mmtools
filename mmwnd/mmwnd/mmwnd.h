@@ -15,7 +15,11 @@ public:
     return instance;
   }
   bool load(void) {
+#ifdef PLATFORM_X64
+    module_ = ::LoadLibrary(_T("mmwndhook64.dll"));
+#else
     module_ = ::LoadLibrary(_T("mmwndhook.dll"));
+#endif // !PLATFORM_X64
     if (!module_) return false;
     if (!check_version(module_)) return false;
     log(_T("version check passed"));
