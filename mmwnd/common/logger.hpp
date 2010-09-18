@@ -67,7 +67,7 @@ private:
     using namespace std;
     tm* tm = gettime();
     fout << setfill('0') << setw(4) << tm->tm_year+1900 << "-"
-         << setfill('0') << setw(2) << tm->tm_mon << "-"
+         << setfill('0') << setw(2) << tm->tm_mon+1 << "-"
          << setfill('0') << setw(2) << tm->tm_mday << "T"
          << setfill('0') << setw(2) << tm->tm_hour << ":"
          << setfill('0') << setw(2) << tm->tm_min << ":"
@@ -77,7 +77,7 @@ private:
     using namespace std;
     tm* tm = gettime();
     fout << setfill(L'0') << setw(4) << tm->tm_year+1900 << L"-"
-         << setfill(L'0') << setw(2) << tm->tm_mon << L"-"
+         << setfill(L'0') << setw(2) << tm->tm_mon+1 << L"-"
          << setfill(L'0') << setw(2) << tm->tm_mday << L"T"
          << setfill(L'0') << setw(2) << tm->tm_hour << L":"
          << setfill(L'0') << setw(2) << tm->tm_min << L":"
