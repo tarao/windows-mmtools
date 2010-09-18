@@ -15,6 +15,10 @@ public:
     }
     return ::CallNextHookEx(NULL, code, param1, param2);
   }
+  static mmwndhook_impl* get(void) {
+    static mmwndhook_impl instance;
+    return &instance;
+  }
 public:
   mmwndhook_impl(void):hook_(NULL),module_(NULL){}
   virtual bool install(void) {
@@ -26,7 +30,7 @@ public:
     if (hook_ && ::UnhookWindowsHookEx(hook_)) hook_ = NULL;
     return hook_ == NULL;
   }
-  virtual void set_module_handle(HINSTANCE module) {
+  void set_module_handle(HINSTANCE module) {
     module_ = module;
   }
 private:

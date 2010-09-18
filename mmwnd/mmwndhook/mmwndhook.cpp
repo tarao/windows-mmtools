@@ -13,7 +13,7 @@ using gnn::log;
 BOOL APIENTRY DllMain(HMODULE module, DWORD  reason, LPVOID reserved) {
   if (reason == DLL_PROCESS_ATTACH) {
     log().file(module);
-    the_mmwndhook()->set_module_handle(module);
+    mmwndhook_impl::get()->set_module_handle(module);
   }
   return TRUE;
 }
@@ -27,6 +27,5 @@ MMWNDHOOK_API const char* version(void) {
 }
 
 MMWNDHOOK_API mmwndhook* the_mmwndhook(void) {
-  static mmwndhook_impl instance;
-  return &instance;
+  return mmwndhook_impl::get();
 }

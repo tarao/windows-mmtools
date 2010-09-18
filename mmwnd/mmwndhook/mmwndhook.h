@@ -11,7 +11,6 @@ class mmwndhook {
 public:
   virtual bool install(void)=0;
   virtual bool uninstall(void)=0;
-  virtual void set_module_handle(HINSTANCE)=0;
 };
 
 const char* MMWNDHOOK_VERSION_STRING = __TIMESTAMP__;

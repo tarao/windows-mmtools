@@ -3,7 +3,7 @@
 
 bool check_version(HMODULE module) {
   typedef const char* (WINAPI *proc_t)(void);
-  proc_t proc = (proc_t)::GetProcAddress(module, "version");
+  proc_t proc = reinterpret_cast<proc_t>(::GetProcAddress(module, "version"));
   const char* ver = proc();
   return std::string(proc()) == MMWNDHOOK_VERSION_STRING;
 }
@@ -25,9 +25,10 @@ public:
     log(_T("version check passed"));
 
     typedef mmwndhook* (WINAPI *proc_t)(void);
-    proc_t proc = (proc_t)::GetProcAddress(module_, "the_mmwndhook");
+    const char* proc_id = "the_mmwndhook";
+    proc_t proc = reinterpret_cast<proc_t>(::GetProcAddress(module_, proc_id));
     if (!proc || !(hook_ = proc())) {
-      log(_T("cannot get hook instance"));
+      log(_T("could not get hook instance"));
       return false;
     }
     return true;

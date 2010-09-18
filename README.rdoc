@@ -17,11 +17,11 @@ Manages windows in the multi-monitor environment.
 === Features
 
 - Prevents windows from moving out of / popping up outside the working area of the desktop. This is useful when your multi-monitor environment has a non-rectangular desktop.
-- Supports both win32 and x64 platforms.
+- Supports both Win32 and x64 platforms.
 
 === Usage
 
-Run <tt>mmwnd.exe</tt> for 32 bit Windows or <tt>mmwnd64.exe</tt> for x64.
+Run <tt>mmwnd.exe</tt> for 32-bit Windows or <tt>mmwnd64.exe</tt> for 64-bit Windows.
 
 === Binary distribution
 
