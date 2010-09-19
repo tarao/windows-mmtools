@@ -25,7 +25,11 @@ gnn::cached_profile& profile(void) {
 BOOL APIENTRY DllMain(HMODULE module, DWORD  reason, LPVOID reserved) {
   if (reason == DLL_PROCESS_ATTACH) {
     log().file(module);
+#ifdef PLATFORM_X64
+    raw_profile().set_path(module, _T("mmwnd64"));
+#else
     raw_profile().set_path(module, _T("mmwnd"));
+#endif // !PLATFORM_X64
     mmwndhook_impl::get()->set_module_handle(module);
   }
   return TRUE;
