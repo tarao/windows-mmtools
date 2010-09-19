@@ -12,10 +12,13 @@ public:
       bool restrict_movement = true;
       profile() >> PROFILE_ENTRY_RESTRICTMOVEMENT >> restrict_movement;
       WINDOWPOS* wp = reinterpret_cast<WINDOWPOS*>(p->lParam);
-      if (!restrict_movement && !(wp->flags & SWP_FRAMECHANGED)) break;
+      if (restrict_movement || (wp->flags & SWP_FRAMECHANGED)) {
+        adjust_pos(p->hwnd, p->message);
+      }
+      break;
     }
-    case WM_CREATE:
-      adjust_pos(p->hwnd, p->message);
+    case WM_SHOWWINDOW:
+      if (p->wParam) adjust_pos(p->hwnd, p->message);
       break;
     }
     return ::CallNextHookEx(NULL, code, param1, param2);
@@ -69,7 +72,6 @@ bool adjust_pos(HWND hwnd, UINT msg) {
   WINDOWINFO wi;
   wi.cbSize = sizeof(wi);
   ::GetWindowInfo(hwnd, &wi);
-  if (!(wi.dwStyle & WS_VISIBLE)) return false; // ignore invisible window
   if (!(wi.dwStyle & WS_BORDER)) return false; // ignore no border
 
   RECT rect;
