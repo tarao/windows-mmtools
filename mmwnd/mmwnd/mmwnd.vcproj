@@ -392,6 +392,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\profile.h"
+				>
+			</File>
+			<File
 				RelativePath=".\resource.h"
 				>
 			</File>

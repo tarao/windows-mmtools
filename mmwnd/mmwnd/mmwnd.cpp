@@ -7,12 +7,9 @@
 #include "../common/logger.hpp"
 using gnn::log;
 
-#include "../common/profile.hpp"
-#define PROFILE_ENTRY_NOTIFYICON  \
-  gnn::ini_profile::entry(_T("settings"), _T("notify_icon"))
-
 #include "../mmwndhook/mmwndhook.h"
 #include "mmwnd.h"
+#include "profile.h"
 #include "notifyicon.h"
 
 gnn::ini_profile& profile(void) {
@@ -99,6 +96,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM param1, LPARAM param2) {
   switch (msg) {
   case WM_COMMAND:
     switch (LOWORD(param1)) {
+    case ID_POPUP_RESTRICTMOVEMENT: {
+      bool restrict_movement = true;
+      profile() >> PROFILE_ENTRY_RESTRICTMOVEMENT >> restrict_movement;
+      restrict_movement = !restrict_movement;
+      profile() << PROFILE_ENTRY_RESTRICTMOVEMENT << restrict_movement;
+      mmwnd::get().reinstall();
+      log() << _T("toggle restrict movement: ")
+            << restrict_movement << std::endl;
+      break;
+    }
     case ID_POPUP_SHOWTRAYICON:
       log("hide tray icon");
       if (the_notify_icon().uninstall()) {
@@ -117,6 +124,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM param1, LPARAM param2) {
       HMENU menu = ::LoadMenu(instance, MAKEINTRESOURCE(IDR_MENU1));
       HMENU popup;
       if (menu && (popup = ::GetSubMenu(menu, 0))) {
+        bool restrict_movement = true;
+        profile() >> PROFILE_ENTRY_RESTRICTMOVEMENT >> restrict_movement;
+        ::CheckMenuItem(popup, ID_POPUP_RESTRICTMOVEMENT,
+                        restrict_movement ? MF_CHECKED : MF_UNCHECKED);
+
         ::SetForegroundWindow(hwnd);
         POINT pt;
         ::GetCursorPos(&pt);

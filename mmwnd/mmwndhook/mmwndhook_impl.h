@@ -1,16 +1,21 @@
 #ifndef MMWNDHOOK_IMPL_H_INCLUDED
 #define MMWNDHOOK_IMPL_H_INCLUDED
 
-bool adjust_pos(HWND hwnd);
+bool adjust_pos(HWND, UINT);
 
 class mmwndhook_impl : public mmwndhook {
 public:
   static LRESULT CALLBACK hook_proc(int code, WPARAM param1, LPARAM param2) {
     CWPRETSTRUCT* p = reinterpret_cast<CWPRETSTRUCT*>(param2);
     switch (p->message) {
-    case WM_WINDOWPOSCHANGED:
+    case WM_WINDOWPOSCHANGED: {
+      bool restrict_movement = true;
+      profile() >> PROFILE_ENTRY_RESTRICTMOVEMENT >> restrict_movement;
+      WINDOWPOS* wp = reinterpret_cast<WINDOWPOS*>(p->lParam);
+      if (!restrict_movement && !(wp->flags & SWP_FRAMECHANGED)) break;
+    }
     case WM_CREATE:
-      adjust_pos(p->hwnd);
+      adjust_pos(p->hwnd, p->message);
       break;
     }
     return ::CallNextHookEx(NULL, code, param1, param2);
@@ -60,11 +65,12 @@ gnn::tstring to_s(const RECT& rect) {
 
 #endif // _DEBUG
 
-bool adjust_pos(HWND hwnd) {
+bool adjust_pos(HWND hwnd, UINT msg) {
   WINDOWINFO wi;
   wi.cbSize = sizeof(wi);
   ::GetWindowInfo(hwnd, &wi);
   if (!(wi.dwStyle & WS_VISIBLE)) return false; // ignore invisible window
+  if (!(wi.dwStyle & WS_BORDER)) return false; // ignore no border
 
   RECT rect;
   ::GetWindowRect(hwnd, &rect);
@@ -91,7 +97,7 @@ bool adjust_pos(HWND hwnd) {
   if ((mon1 = ::MonitorFromPoint(pt1, MONITOR_DEFAULTTONULL)) &&
       (mon2 = ::MonitorFromPoint(pt2, MONITOR_DEFAULTTONULL))) {
     if (wi.dwExStyle & WS_EX_TOPMOST) {
-      return false; // top most window will show over the taskbar
+      return false; // top most window shows over the taskbar
     }
     MONITORINFO mi1, mi2;
     mi1.cbSize = mi2.cbSize = sizeof(MONITORINFO);
@@ -119,7 +125,6 @@ bool adjust_pos(HWND hwnd) {
   HWND desktop = ::GetDesktopWindow();
   if (hwnd == desktop) return false;
 
-
   // ignore descendants of taskbar
   HWND root = NULL;
   HWND tmp = hwnd;
@@ -133,10 +138,13 @@ bool adjust_pos(HWND hwnd) {
   ::MoveWindow(hwnd, pt.x, pt.y, width, height, TRUE);
 
 #ifdef _DEBUG
+  TCHAR class_name[_MAX_PATH];
+  ::GetClassName(hwnd, class_name, _MAX_PATH);
   std::basic_stringstream<gnn::tchar> ss;
-  ss << std::endl << _T("    ") << _T("[hwnd] 0x") << std::setbase(16) << hwnd;
+  ss << std::endl << _T("  ") << _T("[class] ") << class_name;
+  ss << std::endl << _T("   ") << _T("[HWND] 0x") << std::setbase(16) << hwnd;
+  ss << std::endl << _T("    ") << _T("[msg] 0x") << std::setbase(16) << msg;
   ss << std::endl << _T("    ") << _T("[pos] ") << to_s(rect);
-  ss << std::endl << _T("    ") << _T("[mon] ") << to_s(mi.rcWork);
   RECT dst = { pt.x, pt.y, pt.x+width, pt.y+height };
   ss << std::endl << _T("    ") << _T("[dst] ") << to_s(dst);
   ::GetWindowRect(hwnd, &rect);

@@ -56,6 +56,7 @@ IDR_MENU1 MENU
 BEGIN
     POPUP "popup"
     BEGIN
+        MENUITEM "restrict &movement",          ID_POPUP_RESTRICTMOVEMENT, CHECKED
         MENUITEM "show &tray icon",             ID_POPUP_SHOWTRAYICON, CHECKED
         MENUITEM "e&xit",                       ID_POPUP_EXIT
     END

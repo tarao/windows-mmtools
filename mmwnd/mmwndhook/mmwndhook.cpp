@@ -4,6 +4,18 @@
 using gnn::log;
 
 #include "mmwndhook.h"
+#include "../mmwnd/profile.h"
+
+gnn::ini_profile& raw_profile(void) {
+  static gnn::ini_profile instance;
+  return instance;
+}
+
+gnn::cached_profile& profile(void) {
+  static gnn::cached_profile instance(raw_profile());
+  return instance;
+}
+
 #include "mmwndhook_impl.h"
 
 #ifdef _MANAGED
@@ -13,6 +25,7 @@ using gnn::log;
 BOOL APIENTRY DllMain(HMODULE module, DWORD  reason, LPVOID reserved) {
   if (reason == DLL_PROCESS_ATTACH) {
     log().file(module);
+    raw_profile().set_path(module, _T("mmwnd"));
     mmwndhook_impl::get()->set_module_handle(module);
   }
   return TRUE;
