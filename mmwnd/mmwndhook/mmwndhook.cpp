@@ -5,6 +5,7 @@ using gnn::log;
 
 #include "mmwndhook.h"
 #include "../mmwnd/profile.h"
+#include "ignore_list.h"
 
 gnn::ini_profile& raw_profile(void) {
   static gnn::ini_profile instance;
@@ -13,6 +14,16 @@ gnn::ini_profile& raw_profile(void) {
 
 gnn::cached_profile& profile(void) {
   static gnn::cached_profile instance(raw_profile());
+  return instance;
+}
+
+ignore_list& ignore_class(void) {
+  static ignore_list instance;
+  return instance;
+}
+
+ignore_list& ignore_title(void) {
+  static ignore_list instance;
   return instance;
 }
 
@@ -31,6 +42,8 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD  reason, LPVOID reserved) {
     raw_profile().set_path(module, _T("mmwnd"));
 #endif // !PLATFORM_X64
     mmwndhook_impl::get()->set_module_handle(module);
+    ignore_class().set_path(module, "ignore_class");
+    ignore_title().set_path(module, "ignore_title");
   }
   return TRUE;
 }

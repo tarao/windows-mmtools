@@ -1,6 +1,7 @@
 #ifndef MMWNDHOOK_IMPL_H_INCLUDED
 #define MMWNDHOOK_IMPL_H_INCLUDED
 
+gnn::tstring get_window_title(HWND);
 bool adjust_pos(HWND, UINT);
 
 class mmwndhook_impl : public mmwndhook {
@@ -48,14 +49,6 @@ private:
 
 #ifdef _DEBUG
 
-gnn::tstring get_window_title(HWND hwnd) {
-  const size_t max_text = 1024;
-  gnn::tchar title[max_text];
-  title[0] = 0;
-  ::GetWindowText(hwnd, title, max_text);
-  return gnn::tstring(title);
-}
-
 gnn::tstring to_s(const RECT& rect) {
     std::basic_stringstream<gnn::tchar> ss;
     ss << _T("(")
@@ -67,6 +60,15 @@ gnn::tstring to_s(const RECT& rect) {
 }
 
 #endif // _DEBUG
+
+gnn::tstring get_window_title(HWND hwnd) {
+  const size_t max_text = 1024;
+  gnn::tchar title[max_text];
+  title[0] = 0;
+  ::GetWindowText(hwnd, title, max_text);
+  return gnn::tstring(title);
+}
+
 
 bool adjust_pos(HWND hwnd, UINT msg) {
   WINDOWINFO wi;
@@ -123,6 +125,15 @@ bool adjust_pos(HWND hwnd, UINT msg) {
 
   if (pt.x == rect.left && pt.y == rect.top) return false; // no change
 
+  // ignore specific window class
+  TCHAR class_name[_MAX_PATH];
+  ::GetClassName(hwnd, class_name, _MAX_PATH);
+  if (ignore_class()[class_name]) return false;
+
+  // ignore specific window title
+  gnn::tstring title = get_window_title(hwnd);
+  if (ignore_title()[title]) return false;
+
   // ignore desktop window
   HWND desktop = ::GetDesktopWindow();
   if (hwnd == desktop) return false;
@@ -137,11 +148,10 @@ bool adjust_pos(HWND hwnd, UINT msg) {
 
   HWND parent = ::GetParent(hwnd);
   if ((wi.dwStyle & WS_CHILD) && parent) ::ScreenToClient(parent, &pt);
-  ::MoveWindow(hwnd, pt.x, pt.y, width, height, TRUE);
+  UINT flags = SWP_NOACTIVATE|SWP_NOSIZE|SWP_NOZORDER|SWP_NOOWNERZORDER;
+  ::SetWindowPos(hwnd, NULL, pt.x, pt.y, width, height, flags);
 
 #ifdef _DEBUG
-  TCHAR class_name[_MAX_PATH];
-  ::GetClassName(hwnd, class_name, _MAX_PATH);
   std::basic_stringstream<gnn::tchar> ss;
   ss << std::endl << _T("  ") << _T("[class] ") << class_name;
   ss << std::endl << _T("   ") << _T("[HWND] 0x") << std::setbase(16) << hwnd;
@@ -151,8 +161,8 @@ bool adjust_pos(HWND hwnd, UINT msg) {
   ss << std::endl << _T("    ") << _T("[dst] ") << to_s(dst);
   ::GetWindowRect(hwnd, &rect);
   ss << std::endl << _T("    ") << _T("[aft] ") << to_s(rect);
-  log() << _T("'") << get_window_title(hwnd) << _T("'")
-        << ss.str() << std::endl;
+  log() << _T("'") << title << _T("'") << std::endl;
+  log() << _T("info") << ss.str() << std::endl;
 #endif // _DEBUG
 
   return true;

@@ -4,6 +4,8 @@
 #include <string>           // string, wstring
 #include <iostream>         // cout, cin, wcout, wcin, basic_istream, basic_ostream
 #include <fstream>          // basic_istream, basic_ofstream
+#include <utility>          // pair, make_pair
+#include <iterator>         // advance
 
 #ifdef _UNICODE
 #ifndef __TCHAR_DEFINED
@@ -20,13 +22,13 @@
 
 namespace gnn {
 #ifdef _UNICODE
-    typedef std::wstring tstring;
+typedef std::wstring tstring;
 #define _GNN_TCIN  std::wcin
 #define _GNN_TCOUT std::wcout
 #define _GNN_TCERR std::wcerr
 #define _GNN_TCLOG std::wclog
 #else
-    typedef std::string tstring;
+typedef std::string tstring;
 #define _GNN_TCIN  std::cin
 #define _GNN_TCOUT std::cout
 #define _GNN_TCERR std::cerr
@@ -35,17 +37,39 @@ namespace gnn {
 }
 
 namespace gnn {
-    typedef tstring::value_type tchar;
-    typedef tchar*              tstr;
-    typedef const tchar*        ctstr;
-    typedef std::basic_istream<tchar, std::char_traits<tchar> > tistream;
-    typedef std::basic_ostream<tchar, std::char_traits<tchar> > tostream;
-    typedef std::basic_ifstream<tchar, std::char_traits<tchar> > tifstream;
-    typedef std::basic_ofstream<tchar, std::char_traits<tchar> > tofstream;
-    static tistream& tcin  = _GNN_TCIN;
-    static tostream& tcout = _GNN_TCOUT;
-    static tostream& tcerr = _GNN_TCERR;
-    static tostream& tclog = _GNN_TCLOG;
+
+typedef tstring::value_type tchar;
+typedef tchar*              tstr;
+typedef const tchar*        ctstr;
+typedef std::basic_istream<tchar, std::char_traits<tchar> > tistream;
+typedef std::basic_ostream<tchar, std::char_traits<tchar> > tostream;
+typedef std::basic_ifstream<tchar, std::char_traits<tchar> > tifstream;
+typedef std::basic_ofstream<tchar, std::char_traits<tchar> > tofstream;
+static tistream& tcin  = _GNN_TCIN;
+static tostream& tcout = _GNN_TCOUT;
+static tostream& tcerr = _GNN_TCERR;
+static tostream& tclog = _GNN_TCLOG;
+
+tstring lstrip(const tstring& str) {
+  tstring ws(_T(" \t\r\n\f\v"));
+  tstring::const_iterator it = str.begin();
+  tstring::const_iterator end = str.end();
+  while (it != end && ws.find(*it) != tstring::npos) ++it;
+  return tstring(it, end);
+}
+
+tstring rstrip(const tstring& str) {
+  tstring ws(_T(" \t\r\n\f\v"));
+  tstring::const_iterator it = str.begin();
+  tstring::const_iterator end = str.end();
+  while (it != end && ws.find(*(end-1)) != tstring::npos) --end;
+  return tstring(it, end);
+}
+
+tstring strip(const tstring& str) {
+  return lstrip(rstrip(str));
+}
+
 }
 
 #undef _GNN_TCIN
