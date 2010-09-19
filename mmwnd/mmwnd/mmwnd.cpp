@@ -101,19 +101,24 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM param1, LPARAM param2) {
       profile() >> PROFILE_ENTRY_RESTRICTMOVEMENT >> restrict_movement;
       restrict_movement = !restrict_movement;
       profile() << PROFILE_ENTRY_RESTRICTMOVEMENT << restrict_movement;
-      mmwnd::get().reinstall();
       log() << _T("toggle restrict movement: ")
             << restrict_movement << std::endl;
+      mmwnd::get().reinstall();
+      log(_T("hook reinstalled"));
       break;
     }
     case ID_POPUP_SHOWTRAYICON:
-      log("hide tray icon");
+      log(_T("hide tray icon"));
       if (the_notify_icon().uninstall()) {
         profile() << PROFILE_ENTRY_NOTIFYICON << false;
       }
       break;
+    case ID_POPUP_RESET:
+      mmwnd::get().reinstall();
+      log(_T("hook reinstalled"));
+      break;
     case ID_POPUP_EXIT:
-      log("exit from menu");
+      log(_T("exit from menu"));
       ::PostQuitMessage(0);
       break;
     }
