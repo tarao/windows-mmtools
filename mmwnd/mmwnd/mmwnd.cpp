@@ -107,6 +107,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM param1, LPARAM param2) {
       log(_T("hook reinstalled"));
       break;
     }
+    case ID_POPUP_IGNORETOOLARGE: {
+      bool ignore_too_large = false;
+      profile() >> PROFILE_ENTRY_IGNORETOOLARGE >> ignore_too_large;
+      ignore_too_large = !ignore_too_large;
+      profile() << PROFILE_ENTRY_IGNORETOOLARGE << ignore_too_large;
+      log() << _T("toggle ignore too large: ")
+            << ignore_too_large << std::endl;
+    }
     case ID_POPUP_SHOWTRAYICON:
       log(_T("hide tray icon"));
       if (the_notify_icon().uninstall()) {
@@ -133,6 +141,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM param1, LPARAM param2) {
         profile() >> PROFILE_ENTRY_RESTRICTMOVEMENT >> restrict_movement;
         ::CheckMenuItem(popup, ID_POPUP_RESTRICTMOVEMENT,
                         restrict_movement ? MF_CHECKED : MF_UNCHECKED);
+        bool ignore_too_large = false;
+        profile() >> PROFILE_ENTRY_IGNORETOOLARGE >> ignore_too_large;
+        ::CheckMenuItem(popup, ID_POPUP_IGNORETOOLARGE,
+                        ignore_too_large ? MF_CHECKED : MF_UNCHECKED);
 
         ::SetForegroundWindow(hwnd);
         POINT pt;

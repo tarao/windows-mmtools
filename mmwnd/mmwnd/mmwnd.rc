@@ -57,6 +57,7 @@ BEGIN
     POPUP "popup"
     BEGIN
         MENUITEM "restrict &movement",          ID_POPUP_RESTRICTMOVEMENT, CHECKED
+        MENUITEM "ignore too large",            ID_POPUP_IGNORETOOLARGE, CHECKED
         MENUITEM "show &tray icon",             ID_POPUP_SHOWTRAYICON, CHECKED
         MENUITEM "&reset",                      ID_POPUP_RESET
         MENUITEM "e&xit",                       ID_POPUP_EXIT

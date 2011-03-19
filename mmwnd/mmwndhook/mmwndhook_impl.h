@@ -125,6 +125,22 @@ bool adjust_pos(HWND hwnd, UINT msg) {
 
   if (pt.x == rect.left && pt.y == rect.top) return false; // no change
 
+  bool ignore_too_large = false;
+  profile() >> PROFILE_ENTRY_IGNORETOOLARGE >> ignore_too_large;
+  if (ignore_too_large) {
+    POINT mtl = { mi.rcWork.left, mi.rcWork.top };
+    POINT mbr = { mi.rcWork.right, mi.rcWork.bottom };
+
+    // ignore too large window
+    if (::PtInRect(&rect, mtl) && ::PtInRect(&rect, mbr)) return false;
+
+    // ignore if the window cannot be fit in the monitor
+    if (mi.rcWork.right < pt.x + width ||
+        mi.rcWork.bottom < pt.y + height) return false;
+
+    log() << _T("ignore_too_large did not ignore") << std::endl;
+  }
+
   // ignore specific window class
   TCHAR class_name[_MAX_PATH];
   ::GetClassName(hwnd, class_name, _MAX_PATH);
