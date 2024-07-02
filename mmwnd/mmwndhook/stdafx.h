@@ -16,5 +16,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <tchar.h>
+#include <dwmapi.h>
 
 #endif // !STDAFX_H_INCLUDED

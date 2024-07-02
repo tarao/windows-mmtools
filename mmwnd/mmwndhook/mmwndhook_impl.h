@@ -77,7 +77,7 @@ bool adjust_pos(HWND hwnd, UINT msg) {
   if (!(wi.dwStyle & WS_BORDER)) return false; // ignore no border
 
   RECT rect;
-  ::GetWindowRect(hwnd, &rect);
+  ::DwmGetWindowAttribute(hwnd, DWMWA_EXTENDED_FRAME_BOUNDS, &rect, sizeof(rect));
   WINDOWPLACEMENT wndpl;
   wndpl.length = sizeof(wndpl);
   ::GetWindowPlacement(hwnd, &wndpl);
@@ -116,14 +116,18 @@ bool adjust_pos(HWND hwnd, UINT msg) {
   mi.cbSize = sizeof(mi);
   ::GetMonitorInfo(monitor, &mi);
 
-  POINT pt = { rect.left, rect.top };
-  int width = rect.right - rect.left, height = rect.bottom - rect.top;
-  if (mi.rcWork.right < rect.right) pt.x = mi.rcWork.right - width;
-  if (mi.rcWork.bottom < rect.bottom) pt.y = mi.rcWork.bottom - height;
-  if (pt.x < mi.rcWork.left) pt.x = mi.rcWork.left;
-  if (pt.y < mi.rcWork.top) pt.y = mi.rcWork.top;
+  RECT delta = { 0, 0, 0, 0 };
+  if (rect.left < mi.rcWork.left) delta.left = mi.rcWork.left - rect.left;
+  if (rect.right < mi.rcWork.top) delta.top = mi.rcWork.top - rect.top;
+  if (mi.rcWork.right < rect.right) delta.right = mi.rcWork.right - rect.right;
+  if (mi.rcWork.bottom < rect.bottom) delta.bottom = mi.rcWork.bottom - rect.bottom;
 
-  if (pt.x == rect.left && pt.y == rect.top) return false; // no change
+  if (delta.left == 0 && delta.top == 0) return false; // no change
+
+  ::GetWindowRect(hwnd, &rect);
+  POINT pt = { rect.left + delta.left, rect.top + delta.top };
+  int width = (rect.right + delta.right) - pt.x;
+  int height = (rect.bottom + delta.bottom) - pt.y;
 
   bool ignore_too_large = false;
   profile() >> PROFILE_ENTRY_IGNORETOOLARGE >> ignore_too_large;
