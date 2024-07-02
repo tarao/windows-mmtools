@@ -1,16 +1,18 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mmwndhook", "mmwndhook\mmwndhook.vcproj", "{F00FF096-8FAF-418B-B4EA-6F2FD72756ED}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mmwnd", "mmwnd\mmwnd.vcproj", "{F0BA11A4-926E-44AB-97F2-B7708674C996}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3B3B0322-3669-44C7-8911-027B0EB4634F}"
 	ProjectSection(SolutionItems) = preProject
 		common\logger.hpp = common\logger.hpp
 		common\profile.hpp = common\profile.hpp
 		common\tstring.hpp = common\tstring.hpp
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mmwndhook", "mmwndhook\mmwndhook.vcxproj", "{F00FF096-8FAF-418B-B4EA-6F2FD72756ED}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mmwnd", "mmwnd\mmwnd.vcxproj", "{F0BA11A4-926E-44AB-97F2-B7708674C996}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,5 +41,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2BAA40F1-08DB-4609-8A7F-6710887B6EDE}
 	EndGlobalSection
 EndGlobal
